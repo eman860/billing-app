@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NeuraBills – GST Billing & Invoicing</title>
+    <meta name="description"
+        content="NeuraBills is a modern GST-compliant billing and invoicing SaaS for freelancers and small businesses." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+    <!-- ── AUTH OVERLAY ─────────────────────────────────────────────────────── -->
+    <div id="auth-overlay" class="auth-overlay">
+        <div class="auth-brand">
+            <div class="brand-logo-large">⚡</div>
+            <h1 class="brand-name-large">NeuraBills</h1>
+            <p class="brand-tagline">Smart GST Billing for Modern Businesses</p>
+        </div>
+        <div class="auth-card">
+            <!-- Tab bar -->
+            <div class="auth-tabs">
+                <button class="auth-tab active" id="tab-login" onclick="showAuthTab('login')">Login</button>
+                <button class="auth-tab" id="tab-register" onclick="showAuthTab('register')">Register</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" class="auth-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="login-email">Email Address</label>
+                    <input type="email" id="login-email" placeholder="you@business.com" required />
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" placeholder="••••••••" required maxlength="72" />
+                </div>
+                <div id="login-error" class="form-error hidden"></div>
+                <button type="submit" class="btn btn-primary btn-full" id="login-btn">
+                    <span class="btn-text">Sign In</span>
+                    <span class="btn-loader hidden">Signing in…</span>
+                </button>
+            </form>
+
+            <!-- Register Form -->
+            <form id="register-form" class="auth-form hidden" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="reg-name">Full Name</label>
+                    <input type="text" id="reg-name" placeholder="John Doe" required />
+                </div>
+                <div class="form-group">
+                    <label for="reg-email">Email Address</label>
+                    <input type="email" id="reg-email" placeholder="you@business.com" required />
+                </div>
+                <div class="form-group">
+                    <label for="reg-business">Business Name</label>
+                    <input type="text" id="reg-business" placeholder="My Business Pvt. Ltd." required />
+                </div>
+                <div class="form-group">
+                    <label for="reg-password">Password</label>
+                    <input type="password" id="reg-password" placeholder="Min 6 characters" required minlength="6"
+                        maxlength="72" />
+                </div>
+                <div id="register-error" class="form-error hidden"></div>
+                <button type="submit" class="btn btn-primary btn-full" id="register-btn">
+                    <span class="btn-text">Create Account</span>
+                    <span class="btn-loader hidden">Creating…</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ── MAIN APP SHELL ─────────────────────────────────────────────────────── -->
+    <div id="app-shell" class="app-shell hidden">
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <span class="sidebar-logo">⚡</span>
+                <span class="sidebar-title">NeuraBills</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-page="dashboard" onclick="navigate('dashboard', this)">
+                    <span class="nav-icon">📊</span> <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-page="customers" onclick="navigate('customers', this)">
+                    <span class="nav-icon">👥</span> <span>Customers</span>
+                </a>
+                <a href="#" class="nav-item" data-page="products" onclick="navigate('products', this)">
+                    <span class="nav-icon">📦</span> <span>Products</span>
+                </a>
+                <a href="#" class="nav-item" data-page="invoices" onclick="navigate('invoices', this)">
+                    <span class="nav-icon">🧾</span> <span>Invoices</span>
+                </a>
+                <a href="#" class="nav-item" data-page="payments" onclick="navigate('payments', this)">
+                    <span class="nav-icon">💳</span> <span>Payments</span>
+                </a>
+                <div class="nav-divider"></div>
+                <a href="#" class="nav-item" data-page="reports" onclick="navigate('reports', this)">
+                    <span class="nav-icon">📈</span> <span>Reports</span>
+                </a>
+                <a href="#" class="nav-item" data-page="settings" onclick="navigate('settings', this)">
+                    <span class="nav-icon">⚙️</span> <span>Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-chip">
+                    <div class="user-avatar" id="user-avatar">U</div>
+                    <div class="user-info">
+                        <div class="user-name" id="user-name-sidebar">Loading…</div>
+                        <div class="user-role">Owner</div>
+                    </div>
+                </div>
+                <button class="btn-logout" onclick="logout()" title="Logout">⏻</button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content" id="main-content">
+            <!-- Page content injected here by JS -->
+        </main>
+
+    </div>
+
+    <!-- ── MODAL ─────────────────────────────────────────────────────────────── -->
+    <div id="modal-overlay" class="modal-overlay hidden" onclick="closeModalOnBackdrop(event)">
+        <div class="modal" id="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">Modal</h3>
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ── TOAST ─────────────────────────────────────────────────────────────── -->
+    <div id="toast-container"></div>
+
+    <!-- Scripts – loaded in dependency order -->
+    <script src="api.js"></script>
+    <script src="app.js"></script>
+    <script src="dashboard.js"></script>
+    <script src="customers.js"></script>
+    <script src="products.js"></script>
+    <script src="invoices.js"></script>
+    <script src="payments.js"></script>
+    <script src="reports.js"></script>
+    <script src="settings.js"></script>
+</body>
+
+</html>
